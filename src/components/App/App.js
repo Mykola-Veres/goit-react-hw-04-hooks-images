@@ -30,13 +30,15 @@ export default function App () {
     setStatus('pending')
       ImagesAPI.fetchImages(query, page)
         .then(({ hits }) => {
-          if (!query) {setStatus('idle')
-          return notify();
+          if (!query) {setStatus('idle')          
+          return toast.error(
+            `There are no matching images for this request: ${query} !`)
           }
           if (hits.length === 0) {
             setStatus('resolved')
-            setVisible(false)            
-            return notify()}
+            setVisible(false)                    
+            return toast.error(
+              `There are no matching images for this request: ${query} !`)}
           setImages(prevImages => [...prevImages, ...hits])
           setStatus('resolved')
         })
@@ -45,8 +47,10 @@ export default function App () {
         })
         .catch(error => {         
           setError(error)
-          setStatus('rejected')
-          return notify()})
+          setStatus('rejected')          
+          return toast.error(
+            `There are no matching images for this request: ${query} !`)
+        })
   }, [query, page])
 
   const scrollTo = () => {
@@ -64,10 +68,7 @@ export default function App () {
     setPage(1)    
   };
 
-  const handlerClickLoadMore = () => {setPage(prevPage => prevPage + 1)};
-
-  const notify = () => toast.error(
-      `There are no matching images for this request: ${query} !`);
+  const handlerClickLoadMore = () => {setPage(prevPage => prevPage + 1)}; 
 
   const handleronClickImage = (activeImge, tags) => {
     setActiveImge(activeImge)
