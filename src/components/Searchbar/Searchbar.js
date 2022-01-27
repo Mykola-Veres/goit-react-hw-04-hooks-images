@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import {
   SearchbarStyle,
   SearchForm,
@@ -10,30 +10,21 @@ import { FaSearch } from 'react-icons/fa';
 import { IconContext } from 'react-icons';
 import PropTypes from 'prop-types';
 
-class Searchbar extends Component {
-  state = {
-    queryUser: '',
-  };
+export default function Searchbar ({onSubmit}) {
+  const [queryUser, setQueryUser] = useState("")
 
-  handlerChangeUserQuery = e => {
-    this.setState({
-      queryUser: e.target.value,
-    });
-  };
+  const handlerChangeUserQuery = e => {setQueryUser (e.target.value)};
 
-  handelSubmitUserQuery = e => {
+  const handelSubmitUserQuery = e => {
     e.preventDefault();
-    if (this.state.queryUser === '') {
-      return alert('Empty field');
-    }
-    this.props.onSubmit(this.state.queryUser);
-    this.setState({ queryUser: '' });
+    if (queryUser === '') {return alert('Empty field')}
+    onSubmit(queryUser);
+    setQueryUser('');
   };
-
-  render() {
+  
     return (
       <SearchbarStyle>
-        <SearchForm onSubmit={this.handelSubmitUserQuery}>
+        <SearchForm onSubmit={handelSubmitUserQuery}>
           <IconContext.Provider value={{ color: 'blue', size: '2em' }}>
             <SearchFormButton type="submit">
               <FaSearch />
@@ -43,18 +34,16 @@ class Searchbar extends Component {
 
           <SearchFormInput
             type="text"
-            value={this.state.queryUser}
-            onChange={this.handlerChangeUserQuery}
+            value={queryUser}
+            onChange={handlerChangeUserQuery}
             autocomplete="off"
             autoFocus
             placeholder="Search images and photos"
           />
         </SearchForm>
       </SearchbarStyle>
-    );
-  }
+    )
 }
-export default Searchbar;
 
 Searchbar.propTypes = {
   onSubmit: PropTypes.func.isRequired,
